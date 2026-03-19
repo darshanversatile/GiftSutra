@@ -1,3 +1,4 @@
 {"eventId":"69bb82d0dd645c23c18d548a","level":"info","message":"Event created","organizerId":"69ba63aea5182ba6a986b402","service":"audit-trail","timestamp":"2026-03-19 10:30:00","title":"Birthday"}
 {"email":"testuser5@yopmail.com","level":"info","message":"User registered successfully","service":"audit-trail","timestamp":"2026-03-19 11:03:25","userId":"69bb8aa5e6edc4a3fe8607bd"}
 {"eventId":"69bb8ab6e6edc4a3fe8607c4","level":"info","message":"Event created","organizerId":"69bb8aa5e6edc4a3fe8607bd","service":"audit-trail","timestamp":"2026-03-19 11:03:42","title":"Birthday"}
+{"eventId":"69bbb63b39196d45dffd6b7e","level":"info","message":"Event created","organizerId":"69bb8aa5e6edc4a3fe8607bd","service":"audit-trail","timestamp":"2026-03-19 14:09:23","title":"Wedding"}

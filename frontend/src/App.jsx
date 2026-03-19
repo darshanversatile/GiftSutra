@@ -8,6 +8,7 @@ import EventDetails from './pages/EventDetails';
 import CreateEvent from './pages/CreateEvent';
 import MyGifts from './pages/MyGifts';
 import Profile from './pages/Profile';
+import JoinEvent from './pages/JoinEvent';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 
@@ -29,6 +30,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/join" element={<ProtectedRoute><JoinEvent /></ProtectedRoute>} />
               <Route path="/create-event" element={<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
               <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
               <Route path="/events/:id" element={<ProtectedRoute><EventDetails /></ProtectedRoute>} />

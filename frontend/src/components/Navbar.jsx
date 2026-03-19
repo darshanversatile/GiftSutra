@@ -18,6 +18,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                <Link to="/join" className="text-purple-700 hover:bg-purple-50 px-3 py-2 rounded-md font-medium transition-colors">Join Event</Link>
                 <Link to="/dashboard" className="text-purple-700 hover:bg-purple-50 px-3 py-2 rounded-md font-medium transition-colors">Dashboard</Link>
                 <Link to="/events" className="text-purple-700 hover:bg-purple-50 px-3 py-2 rounded-md font-medium transition-colors">Events</Link>
                 <Link to="/my-gifts" className="text-purple-700 hover:bg-purple-50 px-3 py-2 rounded-md font-medium transition-colors">My Gifts</Link>
