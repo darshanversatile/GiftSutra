@@ -7,14 +7,17 @@ const CreateEvent = () => {
     title: '',
     description: '',
     date: '',
-    coverImage: ''
+    coverImage: '',
+    isPrivate: false,
+    passcode: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleSubmit = async (e) => {
@@ -96,6 +99,37 @@ const CreateEvent = () => {
               placeholder="https://example.com/image.jpg"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
             />
+          </div>
+
+          <div className="bg-purple-50 p-4 rounded-lg border border-purple-100 mb-6">
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="isPrivate"
+                name="isPrivate"
+                checked={formData.isPrivate}
+                onChange={handleChange}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="isPrivate" className="ml-2 block text-sm font-bold text-purple-900">
+                Make this a Private Event
+              </label>
+            </div>
+            {formData.isPrivate && (
+              <div>
+                <label className="block text-sm font-medium text-purple-700 mb-1">Event Passcode / Secret Key</label>
+                <input
+                  type="text"
+                  name="passcode"
+                  required={formData.isPrivate}
+                  value={formData.passcode}
+                  onChange={handleChange}
+                  placeholder="e.g. 1234 or SECRETGIFT"
+                  className="w-full border border-purple-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors bg-white"
+                />
+                <p className="text-xs text-purple-600 mt-1">Guests will need this key to view the event and send gifts.</p>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end pt-4">

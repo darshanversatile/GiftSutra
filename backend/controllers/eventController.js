@@ -4,7 +4,7 @@ import { logger, auditLogger } from '../utils/logger.js';
 
 export const createEvent = async (req, res) => {
   try {
-    const { title, description, date, targetAmount, coverImage } = req.body;
+    const { title, description, date, targetAmount, coverImage, isPrivate, passcode } = req.body;
 
     const event = await Event.create({
       title,
@@ -12,6 +12,8 @@ export const createEvent = async (req, res) => {
       date,
       targetAmount,
       coverImage,
+      isPrivate,
+      passcode,
       organizer: req.user._id,
     });
 
@@ -25,7 +27,7 @@ export const createEvent = async (req, res) => {
 
 export const getEvents = async (req, res) => {
   try {
-    const events = await Event.find({}).populate('organizer', 'name email');
+    const events = await Event.find({ isPrivate: { $ne: true } }).populate('organizer', 'name email');
     res.json(events);
   } catch (error) {
     logger.error(`Get events error: ${error.message}`, { stack: error.stack });
@@ -37,11 +39,20 @@ export const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).populate('organizer', 'name email');
 
-    if (event) {
-      res.json(event);
-    } else {
-      res.status(404).json({ message: 'Event not found' });
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
     }
+
+    if (event.isPrivate) {
+      const isOrganizer = req.user && req.user._id.toString() === event.organizer._id.toString();
+      const providedPasscode = req.query.passcode || req.headers['x-passcode'];
+      
+      if (!isOrganizer && event.passcode && providedPasscode !== event.passcode) {
+        return res.status(403).json({ message: 'Passcode required to view this event', isPrivate: true });
+      }
+    }
+
+    res.json(event);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

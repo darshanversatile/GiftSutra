@@ -30,6 +30,13 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isPrivate: {
+      type: Boolean,
+      default: false,
+    },
+    passcode: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
