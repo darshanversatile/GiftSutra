@@ -102,44 +102,6 @@ export const sendInvitation = async (req, res) => {
       return res.status(403).json({ message: 'Only the event organizer can send invitations' });
     }
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    const invitationLink = `${frontendUrl}/events/${id}`;
-
-    await sendInvitationEmail(email, {
-      title: event.title,
-      description: event.description,
-      date: event.date,
-      organizerName: event.organizer.name,
-    }, invitationLink);
-
-    auditLogger.info(`Invitation sent`, { eventId: id, organizerId: req.user._id, invitedEmail: email });
-    res.json({ message: 'Invitation sent successfully' });
-  } catch (error) {
-    logger.error(`Send invitation error: ${error.message}`, { stack: error.stack, userId: req.user._id });
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
-
-export const sendInvitation = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ message: 'Email is required' });
-    }
-
-    const event = await Event.findById(id).populate('organizer', 'name email');
-
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    // Check if the user is the organizer
-    if (event.organizer._id.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Only the event organizer can send invitations' });
-    }
-
     // Check if already invited
     const existingRSVP = await RSVP.findOne({ eventId: id, email: email.toLowerCase() });
     if (existingRSVP) {
