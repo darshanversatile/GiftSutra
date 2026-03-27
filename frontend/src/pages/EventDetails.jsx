@@ -29,6 +29,10 @@ const EventDetails = () => {
   const [attendanceStats, setAttendanceStats] = useState(null);
   const [showAttendance, setShowAttendance] = useState(false);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
+  const isOrganizer =
+    !!user &&
+    !!event &&
+    user._id?.toString() === event.organizer?._id?.toString();
 
   const fetchEvent = async (passcodeOverride = "") => {
     try {
@@ -97,10 +101,10 @@ const EventDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    if (showAttendance && user?._id === event?.organizer?._id) {
+    if (showAttendance && isOrganizer) {
       fetchAttendanceList();
     }
-  }, [showAttendance, id, user, event]);
+  }, [showAttendance, id, isOrganizer]);
 
   const handlePasscodeSubmit = (e) => {
     e.preventDefault();
@@ -357,8 +361,6 @@ const EventDetails = () => {
         Event not found
       </div>
     );
-
-  const isOrganizer = user?._id === event.organizer?._id;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10">
