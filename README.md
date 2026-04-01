@@ -35,15 +35,15 @@ GiftSutra helps you track products, manage inventory, and perform CRUD operation
 ---
 
 ## 📂 Project Structure
--GiftSutra/
--│
--├── client/ # React frontend
--├── server/ # Backend (Node + Express)
--├── models/ # Database schemas
--├── routes/ # API routes
--├── controllers/ # Business logic
--├── config/ # Database configuration
--└── README.md
+- GiftSutra/
+- │
+- ├── client/ # React frontend
+- ├── server/ # Backend (Node + Express)
+- ├── models/ # Database schemas
+- ├── routes/ # API routes
+- ├── controllers/ # Business logic
+- ├── config/ # Database configuration
+- └── README.md
 
 ---
 
@@ -94,10 +94,11 @@ npm run dev
 ---
 
 ### 📈 Future Improvements
--🔐 Add authentication system
--🧠 AI-based gift suggestions
--🛒 Wishlist / cart system
--📱 Improve mobile responsiveness
+
+- 🔐 Add authentication system
+- 🧠 AI-based gift suggestions
+- 🛒 Wishlist / cart system
+- 📱 Improve mobile responsiveness
 
 ---
 
