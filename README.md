@@ -1,97 +1,125 @@
-# 🎁 GiftSutra
+# 🎁 GiftSutra – Smart Gift Management System
 
-A full-stack MERN application to manage and organize gift items with ease.  
-GiftSutra helps you track products, manage inventory, and perform CRUD operations efficiently.
+A full-stack **Gift Management Platform** built using the **MERN Stack (MongoDB, Express.js, React.js, Node.js)**.
+GiftSutra helps manage, organize, and streamline gift-related data with a modern UI and scalable backend.
 
 ---
 
 ## 🚀 Features
 
-- 🛍️ Add new gift items  
-- ✏️ Edit existing items  
-- ❌ Delete products  
-- 📦 View all gifts in one place  
-- 🔍 Search and filter functionality  
-- 💰 Track price and product details  
-- ⚡ Fast and responsive UI  
-- 🔒 Single-user system (No authentication)
+* 🎁 Add, update, and delete gift items
+* 📦 Manage product listings
+* 🔍 Organized backend with MVC structure
+* ⚡ Fast frontend powered by Vite
+* 🎨 Modern UI using Tailwind CSS
+* 🔗 RESTful API integration
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- React.js  
-- Axios  
-- CSS / Tailwind CSS  
+
+* React.js
+* Vite
+* Tailwind CSS
+* HTML
 
 ### Backend
-- Node.js  
-- Express.js  
+
+* Node.js
+* Express.js
 
 ### Database
-- MongoDB (Mongoose)  
+
+* MongoDB (Mongoose)
 
 ---
 
 ## 📂 Project Structure
-- GiftSutra/
-- │
-- ├── client/ # React frontend
-- ├── server/ # Backend (Node + Express)
-- ├── models/ # Database schemas
-- ├── routes/ # API routes
-- ├── controllers/ # Business logic
-- ├── config/ # Database configuration
-- └── README.md
+
+```bash
+GiftSutra/
+│── backend/
+│   ├── config/
+│   ├── controllers/
+│   ├── logs/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── seed.js
+│   ├── server.js
+│   ├── vercel.json
+│   └── package.json
+│
+│── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── .env
+│   ├── index.html
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── vite.config.js
+│   └── package.json
+│
+│── README.md
+```
 
 ---
 
 ## ⚙️ Installation & Setup
 
-### 1. Clone the repository
-```
+### 1️⃣ Clone Repository
+
+```bash
 git clone https://github.com/Sujal1444/GiftSutra.git
 cd GiftSutra
 ```
+
 ---
 
-### 2. Install dependencies
+### 2️⃣ Backend Setup
 
-Backend:
-```
+```bash
 cd backend
 npm install
 ```
-Frontend:
-```
-cd frontend
-npm install
-```
----
 
-## 3. Environment Variables
-
-Create a `.env` file inside the `server` folder:
+Create `.env` file in `/backend`:
 
 ```env
-PORT=5000
 MONGO_URI=your_mongodb_connection_string
+PORT=5000
 ```
+
+Run backend:
+
+```bash
+npm run dev
+```
+
 ---
 
-### 4. Run the app
-- Backend:
+### 3️⃣ Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
- npm run dev
-```
-- Frontend:
-```
- npm run dev
-```
+
 ---
 
-### 🔗 API Endpoints
+## 🌐 Deployment
+
+* 🚀 Frontend deployed using **Vercel**
+* ⚙️ Backend deployment ready (`vercel.json` included)
+
+---
+
+## 🔌 API Endpoints (Example)
+
 | Method | Endpoint       | Description   |
 | ------ | -------------- | ------------- |
 | GET    | /api/gifts     | Get all gifts |
@@ -101,22 +129,35 @@ MONGO_URI=your_mongodb_connection_string
 
 ---
 
-### 📈 Future Improvements
+## 🎨 UI & Styling
 
-- 🔐 Add authentication system
-- 🧠 AI-based gift suggestions
-- 🛒 Wishlist / cart system
-- 📱 Improve mobile responsiveness
+* Tailwind CSS for modern design
+* Fully responsive layout
+* Clean and minimal interface
 
 ---
 
-### 👨‍💻 Author
+## ⚡ Future Improvements
 
-### Sujal Patel
-- GitHub: https://github.com/Sujal1444
+* 🔐 Authentication & user roles
+* ❤️ Wishlist feature
+* 📊 Dashboard & analytics
+* 🛒 E-commerce integration
 
-****
+---
 
-If you like this project, give it a ⭐ on Git
-Hub!
-****
+## 🤝 Contributing
+
+Contributions are welcome!
+Fork the repo and submit a pull request 🚀
+
+---
+
+## 👨‍💻 Author
+
+**Sujal Patel**
+🔗 https://github.com/Sujal1444
+
+---
+
+⭐ If you like this project, don’t forget to star the repo!
