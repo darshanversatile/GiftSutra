@@ -58,13 +58,13 @@ cd GiftSutra
 
 ### 2. Install dependencies
 
-Backend:
-cd server
-npm install
+- Backend:
+- cd backend
+- npm install
 
 Frontend:
-cd client
-npm install
+- cd frontend
+- npm install
 
 ---
 
@@ -75,11 +75,11 @@ PORT=5000
 MONGO_URI=your_mongodb_connection_string
 
 ### 4. Run the app
-Backend:
-npm run dev
+- Backend:
+- npm run dev
 
-Frontend:
-npm run dev
+- Frontend:
+- npm run dev
 
 ---
 
