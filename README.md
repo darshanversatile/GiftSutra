@@ -83,7 +83,7 @@ MONGO_URI=your_mongodb_connection_string
 
 ---
 
-###🔗 API Endpoints
+### 🔗 API Endpoints
 | Method | Endpoint       | Description   |
 | ------ | -------------- | ------------- |
 | GET    | /api/gifts     | Get all gifts |
