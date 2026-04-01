@@ -50,22 +50,24 @@ GiftSutra helps you track products, manage inventory, and perform CRUD operation
 ## ⚙️ Installation & Setup
 
 ### 1. Clone the repository
-
+```
 git clone https://github.com/Sujal1444/GiftSutra.git
 cd GiftSutra
-
+```
 ---
 
 ### 2. Install dependencies
-
+```
 Backend:
 - cd backend
 - npm install
 
+```
+```
 Frontend:
 - cd frontend
 - npm install
-
+```
 ---
 
 ## 3. Environment Variables
@@ -80,11 +82,13 @@ MONGO_URI=your_mongodb_connection_string
 
 ### 4. Run the app
 - Backend:
+```
  npm run dev
-
+```
 - Frontend:
+```
  npm run dev
-
+```
 ---
 
 ### 🔗 API Endpoints
