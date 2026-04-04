@@ -12,7 +12,7 @@ const {
   getAttendanceList,
   getMyRSVP
 } = require("../controllers/eventController.js");
-const { protect, optionalAuth } = require("../middleware/authMiddleware.js");
+const { protect, optionalAuth } = require("../middleware/auth.js");
 
 const router = express.Router();
 

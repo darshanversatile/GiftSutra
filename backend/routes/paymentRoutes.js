@@ -1,5 +1,5 @@
 const express = require("express");
-const { protect } = require("../middleware/authMiddleware.js");
+const { protect } = require("../middleware/auth.js");
 const { createManualGift, createOrder, verifyPayment } = require("../controllers/paymentController.js");
 
 const router = express.Router();
