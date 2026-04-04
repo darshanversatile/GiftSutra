@@ -51,7 +51,7 @@ const sendEmailOtp = (email, otp) => {
   return true;
 };
 
-sendEmail: (email, subject, html, file) => {
+const sendEmail = (email, subject, html, file) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -86,7 +86,7 @@ sendEmail: (email, subject, html, file) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -94,18 +94,15 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
+    const OTP = generateOTP();
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      otp: OTP,
     });
 
     if (user) {
-      const OTP = generateOTP;
-      sendOTP(user.email, OTP);
+      sendEmailOtp(user.email, OTP);
       auditLogger.info(`User registered successfully`, {
         userId: user._id,
         email: user.email,
@@ -130,35 +127,34 @@ const registerUser = async (req, res) => {
   }
 };
 
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET || 'fallback_secret_key', {
+    expiresIn: "30d",
+  });
+};
+
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
     const user = await User.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = generateToken(user._id);
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
+    if (user) {
+      const OTP = generateOTP();
+      user.otp = OTP;
+      await user.save();
 
-      auditLogger.info(`User logged in successfully`, {
+      sendEmailOtp(user.email, OTP);
+
+      auditLogger.info(`OTP generated for login`, {
         userId: user._id,
         email: user.email,
       });
 
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-      });
+      res.status(200).json({ message: "OTP sent to email", email: user.email });
     } else {
-      logger.warn(`Login failed: Invalid credentials for ${email}`);
-      res.status(401).json({ message: "Invalid email or password" });
+      logger.warn(`Login failed: User not found for ${email}`);
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     logger.error(`Login error: ${error.message}`, {
@@ -276,6 +272,38 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.otp !== String(otp)) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    user.isVerified = true;
+    user.otp = undefined;
+    await user.save();
+
+    const token = generateToken(user._id);
+
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
@@ -329,4 +357,5 @@ module.exports = {
   updateUserProfile,
   forgotPassword,
   resetPassword,
+  verifyOTP,
 };

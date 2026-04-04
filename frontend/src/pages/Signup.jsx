@@ -6,7 +6,6 @@ import logo from '../assets/logo.svg';
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -14,8 +13,8 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register(name, email, password);
-      navigate('/dashboard');
+      await register(name, email);
+      navigate('/verify-otp', { state: { email } });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     }
@@ -50,17 +49,6 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)} 
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
               placeholder="you@example.com"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input 
-              type="password" 
-              required 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-              placeholder="••••••••"
             />
           </div>
           <button 

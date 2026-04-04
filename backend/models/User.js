@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     avatar: {
       type: String, 
@@ -24,6 +23,13 @@ const userSchema = new mongoose.Schema(
     },
     resetPasswordExpires: {
       type: Date,
+    },
+    otp: {
+      type: String,
+    },
+  isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
