@@ -13,10 +13,12 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 dotenv.config();
 
 const app = express();
+app.use(morgan("dev"));
 
 app.use(
   cors({
-    origin: "https://api-giftsutra.vercel.app",
+    origin: true,
+    credentials: true,
   }),
 );
 
@@ -28,7 +30,6 @@ app.use(cookieParser());
 const morganStream = {
   write: (message) => logger.info(message.trim()),
 };
-app.use(morgan("dev"));
 
 // Output the key length to console to ensure env is loading
 console.log(
