@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const CreateEvent = () => {
+  const { user, loading: authLoading } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -15,6 +17,12 @@ const CreateEvent = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, authLoading, navigate]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
@@ -26,14 +34,31 @@ const CreateEvent = () => {
     setError('');
 
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Authentication required. Please login first.');
+        navigate('/login');
+        return;
+      }
+
       const { data } = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/events`,
         formData,
-        { withCredentials: true }
+        { 
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
       navigate(`/events/${data._id}`);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create event');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to create event';
+      setError(errorMessage);
+      if (err.response?.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
     } finally {
       setLoading(false);
     }
@@ -41,6 +66,11 @@ const CreateEvent = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {authLoading ? (
+        <div className="bg-white rounded-xl shadow-lg border border-purple-50 p-8 text-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      ) : (
       <div className="bg-white rounded-xl shadow-lg border border-purple-50 p-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6 border-b pb-4 border-purple-100">Create New Event</h1>
         
@@ -150,6 +180,7 @@ const CreateEvent = () => {
           </div>
         </form>
       </div>
+      )}
     </div>
   );
 };
