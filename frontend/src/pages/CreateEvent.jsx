@@ -27,7 +27,7 @@ const CreateEvent = () => {
 
     try {
       const { data } = await axios.post(
-        'http://localhost:5000/api/events',
+        `${import.meta.env.VITE_BACKEND_URL}/api/events`,
         formData,
         { withCredentials: true }
       );

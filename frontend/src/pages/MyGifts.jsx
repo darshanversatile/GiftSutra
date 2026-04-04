@@ -8,7 +8,7 @@ const MyGifts = () => {
   useEffect(() => {
     const fetchGifts = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/events/mygifts');
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/events/mygifts`);
         setGifts(data);
       } catch (error) {
         console.error('Failed to fetch gifts', error);

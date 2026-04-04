@@ -12,7 +12,7 @@ const Profile = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.put('http://localhost:5000/api/auth/profile', 
+      const { data } = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, 
         { name, avatar },
         { withCredentials: true }
       );

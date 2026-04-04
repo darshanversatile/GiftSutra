@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/auth/profile');
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`);
         setUser(data);
       } catch (error) {
         setUser(null);
@@ -25,27 +25,27 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+    const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, { email, password });
     setUser(data);
   };
 
   const register = async (name, email, password) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+    const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, { name, email, password });
     setUser(data);
   };
 
   const logout = async () => {
-    await axios.post('http://localhost:5000/api/auth/logout');
+    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`);
     setUser(null);
   };
 
   const forgotPassword = async (email) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+    const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/forgot-password`, { email });
     return data;
   };
 
   const resetPassword = async (token, password) => {
-    const { data } = await axios.post(`http://localhost:5000/api/auth/reset-password/${token}`, { password });
+    const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password/${token}`, { password });
     return data;
   };
 
