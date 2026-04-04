@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const CreateEvent = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading, token } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -18,10 +18,10 @@ const CreateEvent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !isAuthenticated) {
       navigate('/login');
     }
-  }, [user, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,8 +34,8 @@ const CreateEvent = () => {
     setError('');
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
+      const authToken = token || localStorage.getItem('token');
+      if (!authToken) {
         setError('Authentication required. Please login first.');
         navigate('/login');
         return;
@@ -46,7 +46,7 @@ const CreateEvent = () => {
         formData,
         { 
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${authToken}`,
             'Content-Type': 'application/json'
           }
         }

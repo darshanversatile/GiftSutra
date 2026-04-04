@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 
 const Login = () => {
@@ -9,15 +9,17 @@ const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await login(email);
-      navigate('/verify-otp', { state: { email } });
+      navigate('/verify-otp', { state: { email, from } });
     } catch (err) {
       if (err.response?.status === 403) {
-        navigate('/verify-otp', { state: { email } });
+        navigate('/verify-otp', { state: { email, from } });
       } else {
         setError(err.response?.data?.message || 'Login failed. User not found.');
       }

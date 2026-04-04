@@ -16,13 +16,17 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
 
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        if (localStorage.getItem('token')) {
+        const storedToken = localStorage.getItem('token');
+        setToken(storedToken);
+
+        if (storedToken) {
           const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`);
           setUser(data);
         } else {
@@ -30,6 +34,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         localStorage.removeItem('token');
+        setToken(null);
         setUser(null);
       } finally {
         setLoading(false);
@@ -41,10 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email) => {
     const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, { email });
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-    }
-    setUser(data);
+    return data;
   };
 
   const register = async (name, email) => {
@@ -56,6 +58,7 @@ export const AuthProvider = ({ children }) => {
     const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-otp`, { email, otp });
     if (data.token) {
       localStorage.setItem('token', data.token);
+      setToken(data.token);
     }
     setUser(data);
     return data;
@@ -64,6 +67,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`);
     localStorage.removeItem('token');
+    setToken(null);
     setUser(null);
   };
 
@@ -77,8 +81,10 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const isAuthenticated = Boolean(token || user);
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, register, verifyOtp, logout, forgotPassword, resetPassword, loading }}>
+    <AuthContext.Provider value={{ user, setUser, token, isAuthenticated, login, register, verifyOtp, logout, forgotPassword, resetPassword, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

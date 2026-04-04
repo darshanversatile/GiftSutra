@@ -11,6 +11,7 @@ const VerifyOTP = () => {
   const [error, setError] = useState(null);
 
   const email = location.state?.email;
+  const redirectTo = location.state?.from || '/dashboard';
 
   if (!email) {
     return (
@@ -33,7 +34,7 @@ const VerifyOTP = () => {
     e.preventDefault();
     try {
       await verifyOtp(email, otp);
-      navigate('/dashboard');
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid OTP. Please try again.');
     }
