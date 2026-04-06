@@ -283,7 +283,6 @@ const EventDetails = () => {
           eventId: id,
           amount: finalAmount,
         },
-        { withCredentials: true },
       );
 
       if (!orderData.success) {
@@ -302,15 +301,14 @@ const EventDetails = () => {
           try {
             const verifyData = await axios.post(
               `${API_URL}/api/payment/verify`,
-                {
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-                  eventId: id,
-                  amount: finalAmount,
-                },
-                { withCredentials: true },
-              );
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                eventId: id,
+                amount: finalAmount,
+              },
+            );
 
             if (verifyData.data.success) {
               alert("Payment Successful! Thank you for the gift.");
@@ -324,9 +322,9 @@ const EventDetails = () => {
           }
         },
         prefill: {
-          name: user?.name || "",
-          email: user?.email || "",
-          contact: user?.phone || "",
+          name: "",
+          email: "",
+          contact: "",
         },
         theme: {
           color: "#7e22ce",
