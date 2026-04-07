@@ -39,6 +39,7 @@ const EventDetails = () => {
   const [attendanceLoading, setAttendanceLoading] = useState(false);
   const [giftList, setGiftList] = useState([]);
   const [giftsLoading, setGiftsLoading] = useState(false);
+  const [copyInviteMessage, setCopyInviteMessage] = useState(null);
   const normalizedUserId = user?._id?.toString?.() || user?.id?.toString?.() || "";
   const normalizedOrganizerId =
     event?.organizer?._id?.toString?.() || event?.organizer?.id?.toString?.() || "";
@@ -478,6 +479,62 @@ const EventDetails = () => {
     }
   };
 
+  const buildInviteLink = () => {
+    const inviteUrl = new URL(`/events/${event._id}`, window.location.origin);
+    if (event.passcode) {
+      inviteUrl.searchParams.set("passcode", event.passcode);
+    }
+    return inviteUrl.toString();
+  };
+
+  const fallbackCopyToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.top = "-9999px";
+    textArea.style.left = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch (error) {
+      copied = false;
+    }
+
+    document.body.removeChild(textArea);
+    return copied;
+  };
+
+  const handleCopyInviteLink = async () => {
+    const link = buildInviteLink();
+
+    try {
+      if (navigator?.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(link);
+      } else {
+        const copied = fallbackCopyToClipboard(link);
+        if (!copied) {
+          throw new Error("Clipboard API unavailable");
+        }
+      }
+
+      setCopyInviteMessage({
+        type: "success",
+        text: "Invite link copied. Share it with your guests.",
+      });
+    } catch (error) {
+      setCopyInviteMessage({
+        type: "error",
+        text: "Auto-copy is blocked on this browser. A manual copy dialog will open.",
+      });
+      window.prompt("Copy this invite link:", link);
+    }
+  };
+
   if (loading)
     return (
       <div className="text-center mt-10 text-purple-600 font-bold">
@@ -607,11 +664,7 @@ const EventDetails = () => {
                     </p>
                   </div>
                   <button
-                    onClick={() => {
-                      const link = `${window.location.origin}/events/${event._id}${event.passcode ? `?passcode=${event.passcode}` : ""}`;
-                      navigator.clipboard.writeText(link);
-                      alert("Invite Link Copied! Send it to your guests.");
-                    }}
+                    onClick={handleCopyInviteLink}
                     className="bg-purple-100 text-purple-700 hover:bg-purple-200 py-2 px-4 rounded-lg font-bold transition-colors flex items-center shadow-sm"
                   >
                     <svg
@@ -631,6 +684,13 @@ const EventDetails = () => {
                     Copy Invite Link
                   </button>
                 </div>
+                {copyInviteMessage && (
+                  <p
+                    className={`mb-4 text-sm ${copyInviteMessage.type === "success" ? "text-green-600" : "text-amber-600"}`}
+                  >
+                    {copyInviteMessage.text}
+                  </p>
+                )}
 
                 {/* Email Invitation Section */}
                 <div className="bg-purple-50 rounded-xl p-6 mt-4">

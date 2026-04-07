@@ -25,6 +25,19 @@ const CreateEvent = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === 'date') {
+      const [year = '', month = '', day = ''] = value.split('-');
+      const normalizedYear = year.replace(/\D/g, '').slice(0, 4);
+      const normalizedDateParts = [normalizedYear];
+
+      if (month) normalizedDateParts.push(month);
+      if (day) normalizedDateParts.push(day);
+
+      setFormData({ ...formData, [name]: normalizedDateParts.join('-') });
+      return;
+    }
+
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
@@ -32,6 +45,13 @@ const CreateEvent = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    const [year = ''] = formData.date.split('-');
+    if (!/^\d{4}$/.test(year)) {
+      setError('Event year must be exactly 4 digits.');
+      setLoading(false);
+      return;
+    }
 
     try {
       const authToken = token || localStorage.getItem('token');
@@ -115,6 +135,8 @@ const CreateEvent = () => {
               required
               value={formData.date}
               onChange={handleChange}
+              min="1000-01-01"
+              max="9999-12-31"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
             />
           </div>

@@ -113,12 +113,21 @@ exports.createOrder = async (req, res) => {
       currency: order.currency,
     });
   } catch (error) {
-    logger.error(`Error creating order: ${error.message}`, {
-      stack: error.stack,
+    logger.error(`Error creating order`, {
+      error: error,
+      message: error?.message,
+      stack: error?.stack,
       eventId: req.body.eventId,
       amount: req.body.amount,
     });
-    res.status(500).json({ success: false, message: "Could not create order" });
+    res.status(500).json({
+      success: false,
+      message:
+        error?.error?.description || // Razorpay error
+        error?.message ||
+        JSON.stringify(error) ||
+        "Could not create order",
+    });
   }
 };
 

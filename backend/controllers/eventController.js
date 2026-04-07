@@ -8,6 +8,12 @@ const { logger, auditLogger } = require("../utils/logger.js");
 exports.createEvent = async (req, res) => {
   try {
     const { title, description, date, targetAmount, coverImage, isPrivate, passcode } = req.body;
+    const dateValue = typeof date === 'string' ? date : '';
+    const [year = ''] = dateValue.split('-');
+
+    if (!/^\d{4}$/.test(year)) {
+      return res.status(400).json({ message: 'Event year must be exactly 4 digits' });
+    }
 
     const event = await Event.create({
       title,

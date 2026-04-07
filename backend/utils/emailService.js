@@ -1,30 +1,52 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: process.env.SMTP_PORT || 587,
-    secure: false,
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-    },
-});
+// const transporter = nodemailer.createTransport({
+//     host: process.env.SMTP_HOST || 'gmail.com',
+//     auth: {
+//         user: process.env.EMAIL_USERNAME,
+//         pass: process.env.EMAIL_PASSWORD,
+//     },
+// });
+
+
 
 exports.sendInvitationEmail = async (to, eventDetails, invitationLink) => {
-    const { title, description, date, organizerName } = eventDetails;
 
-    const formattedDate = new Date(date).toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
 
-    const mailOptions = {
-        from: `"GiftSutra" <${process.env.SMTP_USER}>`,
-        to,
-        subject: `You're Invited: ${title}`,
-        html: `
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD, // App password
+    },
+  });
+
+  console.log('Email transporter configured with:', {
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD, // Don't log the actual password
+    }
+  });
+
+  const { title, description, date, organizerName } = eventDetails;
+
+  const formattedDate = new Date(date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const mailOptions = {
+    from: `"GiftSutra" <${process.env.EMAIL_USERNAME}>`,
+    to,
+    subject: `You're Invited: ${title}`,
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
         <h2 style="color: #4f46e5; margin-bottom: 20px;">You're Invited! 🎉</h2>
         
@@ -59,24 +81,49 @@ exports.sendInvitationEmail = async (to, eventDetails, invitationLink) => {
         </p>
       </div>
     `,
-    };
+  };
 
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Invitation email sent:', info.messageId);
-        return { success: true, messageId: info.messageId };
-    } catch (error) {
-        console.error('Error sending invitation email:', error);
-        throw new Error('Failed to send invitation email');
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Invitation email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+    // } catch (error) {
+    //     console.error('Error sending invitation email:', error);
+    //     throw new Error('Failed to send invitation email');
+    // }
+  } catch (error) {
+    console.error('FULL ERROR:', error); // <-- THIS is critical
+    throw error; // don't hide real error
+  }
 };
 
 exports.sendPasswordResetEmail = async (to, resetLink) => {
-    const mailOptions = {
-        from: `"GiftSutra" <${process.env.SMTP_USER}>`,
-        to,
-        subject: 'Reset your GiftSutra password',
-        html: `
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD, // App password
+    },
+  });
+
+  console.log('Email transporter configured with:', {
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD, // Don't log the actual password
+    }
+  });
+
+  const mailOptions = {
+    from: `"GiftSutra" <${process.env.SMTP_USER}>`,
+    to,
+    subject: 'Reset your GiftSutra password',
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
         <h2 style="color: #4f46e5; margin-bottom: 20px;">Reset your password</h2>
         <p style="font-size: 16px; color: #333;">We received a request to reset your GiftSutra password.</p>
@@ -94,15 +141,15 @@ exports.sendPasswordResetEmail = async (to, resetLink) => {
         <p style="font-size: 14px; color: #999;">If you did not request this, you can safely ignore this email.</p>
       </div>
     `,
-    };
+  };
 
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Password reset email sent:', info.messageId);
-        return { success: true, messageId: info.messageId };
-    } catch (error) {
-        console.error('Error sending password reset email:', error);
-        throw new Error('Failed to send password reset email');
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Password reset email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw new Error('Failed to send password reset email');
+  }
 };
 
